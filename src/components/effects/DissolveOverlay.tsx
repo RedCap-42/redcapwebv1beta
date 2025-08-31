@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 
-export default function DissolveOverlay({ open, durationMs = 3000, rows = 10, cols = 10, onFullyCovered, onAnimationEnd }: { open: boolean; durationMs?: number; rows?: number; cols?: number; onFullyCovered?: () => void; onAnimationEnd?: () => void; }) {
+export default function DissolveOverlay({ open, rows = 10, cols = 10, onFullyCovered, onAnimationEnd }: { open: boolean; durationMs?: number; rows?: number; cols?: number; onFullyCovered?: () => void; onAnimationEnd?: () => void; }) {
   // Compute a grid that keeps cells square based on viewport ratio
   const [grid, setGrid] = useState({ rows, cols });
 
@@ -47,7 +47,7 @@ export default function DissolveOverlay({ open, durationMs = 3000, rows = 10, co
 
       return { appearDelay, dissolveDelay, totalTime };
     });
-  }, [grid.rows, grid.cols, appearTime, pauseTime, dissolveTime]);
+  }, [grid.rows, grid.cols]);
 
   useEffect(() => {
     if (open && onFullyCovered) {

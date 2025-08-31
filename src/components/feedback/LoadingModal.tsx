@@ -22,16 +22,16 @@ async function fetchMessages(): Promise<string[]> {
   }
 }
 
-export default function LoadingModal({ open, onClose, durationMs = 3000 }: LoadingModalProps) {
+export default function LoadingModal({ open, onClose }: LoadingModalProps) {
   const [visible, setVisible] = useState(open);
   const [messages, setMessages] = useState<string[] | null>(null);
   const [message, setMessage] = useState<string>("Chargement...");
   
   const appearTime = 3000; // 3s pour apparaître
-  const pauseTime = 6000;  // 3s de pause
-  const dissolveTime = 3000; // 2s pour disparaître
-  const totalTime = appearTime + pauseTime + dissolveTime; // 8s total
-  
+  const pauseTime = 6000;  // 6s de pause
+  const dissolveTime = 3000; // 3s pour disparaître
+  const totalTime = appearTime + pauseTime + dissolveTime; // 12s total
+
   // Modal appearance timing
   const modalAppearStart = appearTime; // Modal appears after background
   const modalAppearDuration = 400; // 400ms for modal to appear
@@ -59,7 +59,7 @@ export default function LoadingModal({ open, onClose, durationMs = 3000 }: Loadi
       
       return { appearDelay, dissolveDelay };
     });
-  }, [modalAppearStart, modalAppearDuration, modalDisappearStart, modalDisappearDuration]);
+  }, [modalAppearStart, modalAppearDuration, modalDisappearStart, modalDisappearDuration, total]);
 
   useEffect(() => {
     let timer: number | undefined;

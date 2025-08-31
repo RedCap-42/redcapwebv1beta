@@ -2,8 +2,7 @@
 import Button from "@/components/ui/Button";
 import DissolveOverlay from "@/components/effects/DissolveOverlay";
 import SessionPicker from "@/components/sessions/SessionPicker";
-import { useEffect, useState } from "react";
-import CharacterCard from "@/components/character/CharacterCard";
+import { useState } from "react";
 import CharacterDock from "@/components/character/CharacterDock";
 
 export default function Home() {

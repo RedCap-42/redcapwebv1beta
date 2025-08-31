@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { SessionRandomizer } from "@/utils/sessionRandomizer";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 export type DifficultyKey = "facile" | "moyen" | "difficile";
 
@@ -12,6 +11,9 @@ export type SessionItem = {
   difficulties: Record<DifficultyKey, { label: string; desc?: string; image?: string }>;
 };
 
+// Stable list of difficulties (do not recreate each render)
+const DIFFICULTIES: DifficultyKey[] = ["facile", "moyen", "difficile"]; 
+
 export default function SessionPicker({ open, onSelect }: { open: boolean; onSelect?: (id: string, difficulty: DifficultyKey) => void;}) {
   const [items, setItems] = useState<SessionItem[]>([]);
   const [index, setIndex] = useState(0);
@@ -20,12 +22,17 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
   const [touchEnd, setTouchEnd] = useState(0);
   const [imageSrc, setImageSrc] = useState<string>("");
   const [isRandomizing, setIsRandomizing] = useState(false);
+  const isRandomizingRef = useRef(false);
+  const timersRef = useRef<number[]>([]);
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach((t) => window.clearTimeout(t));
+    timersRef.current = [];
+  }, []);
   const [imageKey, setImageKey] = useState(0); // Force image re-render
   const [finalSelectionMade, setFinalSelectionMade] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
 
-  const difficulties: DifficultyKey[] = ["facile", "moyen", "difficile"];
-  const currentDifficultyIndex = difficulties.indexOf(difficulty);
+  const currentDifficultyIndex = DIFFICULTIES.indexOf(difficulty);
 
   // Function to get a truly random session and difficulty
   const getRandomSessionAndDifficulty = () => {
@@ -66,7 +73,7 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
         "difficile": 1.1
       };
 
-      difficulties.forEach(diff => {
+  DIFFICULTIES.forEach(diff => {
         const key = `${session.id}-${diff}`;
         const weight = difficultyWeights[diff];
         // Add multiple entries based on weight
@@ -99,30 +106,33 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
   };
 
   // Function to randomize with animation
-  const randomizeSelection = () => {
+  const randomizeSelection = useCallback(() => {
     if (items.length === 0) return;
-    
+    if (isRandomizingRef.current) return; // Prevent concurrent/random re-entrancy
+    clearTimers();
+    isRandomizingRef.current = true;
     setIsRandomizing(true);
     setFinalSelectionMade(false);
     
     // Create animation effect by changing selection more slowly
     let animationStep = 0;
-    const animationSteps = 8 + Math.floor(Math.random() * 4); // Fewer steps for slower animation (8-12 steps)
+  const animationSteps = 8 + Math.floor(Math.random() * 4); // Fewer steps for slower animation (8-12 steps)
     const baseInterval = 150; // Increased base interval (was 80ms, now 150ms)
     
     const animate = () => {
       // Use a simple random for animation steps (not the smart algorithm)
       const tempRandomSessionIndex = Math.floor(Math.random() * items.length);
-      const tempRandomDifficultyIndex = Math.floor(Math.random() * difficulties.length);
+  const tempRandomDifficultyIndex = Math.floor(Math.random() * DIFFICULTIES.length);
       
       setIndex(tempRandomSessionIndex);
-      setDifficulty(difficulties[tempRandomDifficultyIndex]);
+  setDifficulty(DIFFICULTIES[tempRandomDifficultyIndex]);
       
       animationStep++;
       if (animationStep < animationSteps) {
         // Gradually increase interval for a "slowing down" effect (slower progression)
         const currentInterval = baseInterval + (animationStep * 15); // Increased progression (was 5ms, now 15ms)
-        setTimeout(animate, currentInterval);
+        const id = window.setTimeout(animate, currentInterval);
+        timersRef.current.push(id);
       } else {
         // Final selection using the smart algorithm
         const finalRandom = getRandomSessionAndDifficulty();
@@ -131,14 +141,16 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
         setFinalSelectionMade(true);
         
         // Force image update after final selection
-        setTimeout(() => {
+        const id = window.setTimeout(() => {
           setIsRandomizing(false);
+          isRandomizingRef.current = false;
         }, 500); // Increased delay for better visibility of final selection (was 300ms)
+        timersRef.current.push(id);
       }
     };
     
     animate();
-  };
+  }, [items.length, clearTimers]);
 
   useEffect(() => {
     (async () => {
@@ -153,11 +165,25 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
   }, []);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      // When closing, stop any ongoing animation
+      clearTimers();
+      isRandomizingRef.current = false;
+      setIsRandomizing(false);
+      return;
+    }
     if (items.length === 0) return;
-    // Pick a truly random session AND difficulty when it opens
+    // Randomize once when opened and data is ready
     randomizeSelection();
-  }, [open, items.length]);
+  }, [open, items.length, randomizeSelection, clearTimers]);
+
+  // On unmount, clear timers
+  useEffect(() => {
+    return () => {
+      clearTimers();
+      isRandomizingRef.current = false;
+    };
+  }, [clearTimers]);
 
   const current = items[index];
   
@@ -227,12 +253,12 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe && currentDifficultyIndex < difficulties.length - 1) {
-      const nextDifficulty = difficulties[currentDifficultyIndex + 1];
+    if (isLeftSwipe && currentDifficultyIndex < DIFFICULTIES.length - 1) {
+      const nextDifficulty = DIFFICULTIES[currentDifficultyIndex + 1];
       handleDifficulty(nextDifficulty);
     }
     if (isRightSwipe && currentDifficultyIndex > 0) {
-      const prevDifficulty = difficulties[currentDifficultyIndex - 1];
+      const prevDifficulty = DIFFICULTIES[currentDifficultyIndex - 1];
       handleDifficulty(prevDifficulty);
     }
   };
@@ -256,7 +282,10 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
         <div className="flex items-center justify-center gap-4 mb-3">
           <div className="pixel-font text-2xl sm:text-3xl">{current.title}</div>
           <button
-            onClick={randomizeSelection}
+            onClick={() => {
+              if (isRandomizingRef.current) return;
+              randomizeSelection();
+            }}
             disabled={isRandomizing}
             className={`pixel-font pixel-btn px-3 py-2 text-sm bg-[#e8f4fd] hover:bg-[#d4e9f7] border-2 border-[#b8daf0] transition-all duration-200 ${
               isRandomizing ? 'opacity-50 cursor-not-allowed animate-pulse' : 'hover:scale-105'
@@ -339,7 +368,7 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {difficulties.map((k, difficultyIndex) => (
+          {DIFFICULTIES.map((k, difficultyIndex) => (
             <button
               key={k}
               type="button"
@@ -357,7 +386,7 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
           <div className={`text-font text-sm sm:text-base mt-4 text-neutral-800 font-medium leading-relaxed transition-opacity duration-300 ${
             isRandomizing ? 'opacity-50' : 'opacity-100'
           }`}>
-            L'objectif de la séance est de courir et {current.difficulties[difficulty].desc.toLowerCase()}
+            L&apos;objectif de la séance est de courir et {current.difficulties[difficulty].desc.toLowerCase()}
           </div>
         )}
 
