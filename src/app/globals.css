@@ -24,6 +24,11 @@ body {
   padding-bottom: max(env(safe-area-inset-bottom), 16px);
 }
 
+/* Helper for safe top spacing on iOS notch devices */
+.safe-top {
+  padding-top: max(env(safe-area-inset-top), 12px);
+}
+
 /* Pixel art vibe */
 .pixel-font { font-family: var(--font-press), ui-monospace, Menlo, Monaco, monospace; }
 .daydream-font { font-family: var(--font-daydream), system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }

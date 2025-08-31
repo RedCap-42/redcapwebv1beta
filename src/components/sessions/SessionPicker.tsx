@@ -277,7 +277,7 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
   };
 
   return (
-    <div className="fixed inset-0 z-40 grid place-items-center px-4 pb-24">
+    <div className="fixed inset-0 z-40 grid place-items-center px-4 pb-24 pt-16 sm:pt-8 bg-white">
       <div className="w-full max-w-[min(92vw,720px)] text-center">
         <div className="flex items-center justify-center gap-4 mb-3">
           <div className="pixel-font text-2xl sm:text-3xl">{current.title}</div>
@@ -296,16 +296,17 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
           </button>
         </div>
 
-        <div className={`relative mx-auto mb-4 session-image-container ${
+  <div className={`relative mx-auto mb-4 mt-2 session-image-container ${
           current.id === 'escalier' 
             ? 'escalier-container' // Use custom escalier styling - clean transparent background
             : 'rounded-lg'
-        }`} style={
+  }`} style={
           current.id === 'escalier' 
             ? { 
-                width: "100%", 
+    width: "100%", 
                 maxWidth: imageAspectRatio && imageAspectRatio < 0.8 ? "300px" : "320px", // Narrower for very vertical images
-                height: "320px"
+    height: "320px",
+    maxHeight: "calc(100dvh - 220px)" // never overlap header/buttons on small screens
               }
             : { width: "100%", aspectRatio: "16/9" } // Standard for others
         }>
