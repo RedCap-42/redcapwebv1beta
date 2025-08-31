@@ -1,0 +1,56 @@
+[
+  {
+    "id": "bakery",
+    "title": "Boulangerie",
+    "image": "/sessions/images/bakery/default.png",
+    "difficulties": {
+      "facile": { "label": "Facile", "desc": "Aller à 1 boulangerie", "image": "/sessions/images/bakery/facile/image.png" },
+      "moyen": { "label": "Moyen", "desc": "Aller à 3 boulangeries", "image": "/sessions/images/bakery/moyen/image.png" },
+      "difficile": { "label": "Difficile", "desc": "Aller à 5 boulangeries", "image": "/sessions/images/bakery/difficile/image.png" }
+    }
+  },
+  {
+    "id": "track",
+    "title": "Piste",
+    "image": "/sessions/images/track/facile/piste_facile-removebg-preview.png",
+    "difficulties": {
+      "facile": { 
+        "label": "Facile", 
+        "desc": "Faire 10 km sur la piste ( 25 tours de 400 m )", 
+        "image": "/sessions/images/track/facile/piste_facile-removebg-preview.png" 
+      },
+      "moyen": { 
+        "label": "Moyen", 
+        "desc": "Faire un semi-marathon sur la piste ( 52 tours et 195 m )", 
+        "image": "/sessions/images/track/moyen/piste-removebg-preview.png" 
+      },
+      "difficile": { 
+        "label": "Difficile", 
+        "desc": "Faire un marathon sur la piste ( 105 tours et 195 m )", 
+        "image": "/sessions/images/track/difficile/piste_difficile-removebg-preview.png" 
+      }
+    }
+  },
+  {
+    "id": "escalier",
+    "title": "Escalier",
+    "image": "/sessions/images/escalier/facile/escalier_facile.png",
+    "difficulties": {
+      "facile": { 
+        "label": "Facile", 
+        "desc": "Faire 324m de D+ (la taille de la Tour Eiffel)", 
+        "image": "/sessions/images/escalier/facile/escalier_facile.png" 
+      },
+      "moyen": { 
+        "label": "Moyen", 
+        "desc": "Faire 1000m de D+ (1KV)", 
+        "image": "/sessions/images/escalier/moyen/escalier_moyen.png" 
+      },
+      "difficile": { 
+        "label": "Difficile", 
+        "desc": "Faire 2Kv de D+ (ca pique quand même)", 
+        "image": "/sessions/images/escalier/difficile/escalier_difficile.png" 
+      }
+    }
+  }
+]
