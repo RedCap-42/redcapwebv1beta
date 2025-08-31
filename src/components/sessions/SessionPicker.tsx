@@ -31,6 +31,33 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
   const [imageKey, setImageKey] = useState(0); // Force image re-render
   const [finalSelectionMade, setFinalSelectionMade] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
+  const [imgPressed, setImgPressed] = useState(false);
+
+  type Kudo = { id: number; left: number; top: number; rotation: number; src: string };
+  const [kudos, setKudos] = useState<Kudo[]>([]);
+  const kudoTimers = useRef<number[]>([]);
+  const clearKudoTimers = useCallback(() => {
+    kudoTimers.current.forEach((t) => window.clearTimeout(t));
+    kudoTimers.current = [];
+  }, []);
+
+  const spawnKudo = useCallback(() => {
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 360;
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 640;
+    const margin = 16;
+    const topMin = 80; // avoid header area
+    const topMax = Math.max(topMin + 100, vh - 200);
+    const left = Math.floor(Math.random() * Math.max(1, vw - 90 - margin * 2)) + margin;
+    const top = Math.floor(Math.random() * Math.max(1, topMax - topMin)) + topMin;
+    const rotation = (Math.random() * 24) - 12; // -12deg to +12deg
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    const src = "/kudos/kudo.png"; // user-provided image
+    setKudos((prev) => [...prev, { id, left, top, rotation, src }]);
+    const removeId = window.setTimeout(() => {
+      setKudos((prev) => prev.filter(k => k.id !== id));
+    }, 2200);
+    kudoTimers.current.push(removeId);
+  }, []);
 
   const currentDifficultyIndex = DIFFICULTIES.indexOf(difficulty);
 
@@ -231,6 +258,11 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
     }
   }, [finalSelectionMade, current, difficulty]);
 
+  // cleanup kudos timers on unmount
+  useEffect(() => {
+    return () => clearKudoTimers();
+  }, [clearKudoTimers]);
+
   const currentImage = imageSrc;
 
   if (!open || !current) return null;
@@ -322,7 +354,7 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
                 current.id === 'escalier' 
                   ? 'session-image-escalier p-4' // Use optimized escalier class with more padding
                   : 'session-image-standard' // Use standard class
-              }`}
+              } ${imgPressed ? 'scale-[0.97]' : ''} transition-transform duration-150 ease-out`}
               onLoad={(e) => {
                 // Detect aspect ratio to optimize display
                 const img = e.target as HTMLImageElement;
@@ -337,6 +369,13 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
                     }
                   : {}
               }
+              onClick={() => {
+                // Small press animation + spawn a kudo
+                setImgPressed(true);
+                const t = window.setTimeout(() => setImgPressed(false), 160);
+                kudoTimers.current.push(t);
+                spawnKudo();
+              }}
               onError={(e) => {
                 // Enhanced fallback for escalier images
                 const img = e.target as HTMLImageElement;
@@ -359,6 +398,21 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
             />
           )}
         </div>
+
+        {/* Floating Kudos overlay */}
+        {kudos.length > 0 && (
+          <div className="pointer-events-none fixed inset-0 z-40">
+            {kudos.map(k => (
+              <img
+                key={k.id}
+                src={k.src}
+                alt="kudo"
+                className="kudo-float absolute w-10 h-10"
+                style={{ left: `${k.left}px`, top: `${k.top}px`, transform: `rotate(${k.rotation}deg)` }}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Mobile carousel for difficulties */}
         <div 
