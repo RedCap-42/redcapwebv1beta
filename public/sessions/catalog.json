@@ -74,5 +74,49 @@
         "image": "/sessions/images/pont/difficile/pont_difficile.png"
       }
     }
+  },
+  {
+    "id": "pancarte",
+    "title": "PANCARTE !",
+    "image": "/sessions/images/pancarte/facile/pancarte_facile.png",
+    "difficulties": {
+      "facile": {
+        "label": "Facile",
+        "desc": "Trouver 2 pancartes ( de ville )",
+        "image": "/sessions/images/pancarte/facile/pancarte_facile.png"
+      },
+      "moyen": {
+        "label": "Moyen",
+        "desc": "Trouver 4 pancartes ( de ville )",
+        "image": "/sessions/images/pancarte/moyen/pancarte_moyen.png"
+      },
+      "difficile": {
+        "label": "Difficile",
+        "desc": "Trouver 7 pancartes ( de ville)",
+        "image": "/sessions/images/pancarte/difficile/pancarte_difficile.png"
+      }
+    }
+  },
+  {
+    "id": "courir-temps",
+    "title": "Courir au temps",
+    "image": "/sessions/images/courir-temps/facile/matin.png",
+    "difficulties": {
+      "facile": {
+        "label": "Facile",
+        "desc": "Courir le matin",
+        "image": "/sessions/images/courir-temps/facile/matin.png"
+      },
+      "moyen": {
+        "label": "Moyen",
+        "desc": "Courir le midi",
+        "image": "/sessions/images/courir-temps/moyen/midi.png"
+      },
+      "difficile": {
+        "label": "Difficile",
+        "desc": "Courir à 00h00",
+        "image": "/sessions/images/courir-temps/difficile/minuit.png"
+      }
+    }
   }
 ]
