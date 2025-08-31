@@ -52,5 +52,27 @@
         "image": "/sessions/images/escalier/difficile/escalier_difficile.png" 
       }
     }
+  },
+  {
+    "id": "pont",
+    "title": "Pont",
+    "image": "/sessions/images/pont/facile/pont_facile.png",
+    "difficulties": {
+      "facile": {
+        "label": "Facile",
+        "desc": "Aller à 3 ponts différents",
+        "image": "/sessions/images/pont/facile/pont_facile.png"
+      },
+      "moyen": {
+        "label": "Moyen",
+        "desc": "Aller à 5 ponts différents",
+        "image": "/sessions/images/pont/moyen/pont_moyen.png"
+      },
+      "difficile": {
+        "label": "Difficile",
+        "desc": "Aller à 8 ponts différents",
+        "image": "/sessions/images/pont/difficile/pont_difficile.png"
+      }
+    }
   }
 ]
