@@ -1,0 +1,32 @@
+{
+  "name": "casquetterouge-hub",
+  "version": "1.0.0",
+  "description": "A hub page for the Casquetterouge project featuring a session generator with a casino roulette animation.",
+  "main": "src/app/layout.tsx",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "jest": "latest",
+    "ts-jest": "latest",
+    "typescript": "latest"
+  },
+  "keywords": [
+    "casquetterouge",
+    "roulette",
+    "session generator"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

@@ -24,7 +24,6 @@ async function fetchMessages(): Promise<string[]> {
 
 export default function LoadingModal({ open, onClose }: LoadingModalProps) {
   const [visible, setVisible] = useState(open);
-  const [messages, setMessages] = useState<string[] | null>(null);
   const [message, setMessage] = useState<string>("Chargement...");
   
   const appearTime = 3000; // 3s pour apparaître
@@ -67,7 +66,6 @@ export default function LoadingModal({ open, onClose }: LoadingModalProps) {
       setVisible(true);
       (async () => {
         const list = await fetchMessages();
-        setMessages(list);
         const choice = list[Math.floor(Math.random() * list.length)] ?? "Chargement...";
         setMessage(choice);
       })();

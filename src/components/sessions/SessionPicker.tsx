@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 export type DifficultyKey = "facile" | "moyen" | "difficile";
 
@@ -62,7 +63,7 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
   const currentDifficultyIndex = DIFFICULTIES.indexOf(difficulty);
 
   // Function to get a truly random session and difficulty
-  const getRandomSessionAndDifficulty = () => {
+  const getRandomSessionAndDifficulty = useCallback((): { sessionIndex: number; difficulty: DifficultyKey } => {
     if (items.length === 0) return { sessionIndex: 0, difficulty: "facile" as DifficultyKey };
     
     // Get recent selections from localStorage to avoid repetition
@@ -130,7 +131,7 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
     }
     
     return { sessionIndex: selected.sessionIndex, difficulty: selected.difficulty };
-  };
+  }, [items]);
 
   // Function to randomize with animation
   const randomizeSelection = useCallback(() => {
@@ -177,7 +178,7 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
     };
     
     animate();
-  }, [items.length, clearTimers]);
+  }, [items.length, clearTimers, getRandomSessionAndDifficulty]);
 
   useEffect(() => {
     (async () => {
@@ -344,10 +345,12 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
         }>
           {/* Illustration that can vary by difficulty */}
           {currentImage && (
-            <img 
+            <Image 
               key={imageKey} // Force re-render with key
               src={currentImage} 
-              alt={current.title} 
+              alt={current.title}
+              width={500}
+              height={300}
               className={`transition-opacity duration-300 ${
                 isRandomizing ? 'opacity-50' : 'opacity-100'
               } ${
@@ -403,11 +406,13 @@ export default function SessionPicker({ open, onSelect }: { open: boolean; onSel
         {kudos.length > 0 && (
           <div className="pointer-events-none fixed inset-0 z-40">
             {kudos.map(k => (
-              <img
+              <Image
                 key={k.id}
                 src={k.src}
                 alt="kudo"
-                className="kudo-float absolute w-10 h-10"
+                width={40}
+                height={40}
+                className="kudo-float absolute"
                 style={{ left: `${k.left}px`, top: `${k.top}px`, transform: `rotate(${k.rotation}deg)` }}
               />
             ))}

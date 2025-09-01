@@ -47,7 +47,7 @@ export default function DissolveOverlay({ open, rows = 10, cols = 10, onFullyCov
 
       return { appearDelay, dissolveDelay, totalTime };
     });
-  }, [grid.rows, grid.cols]);
+  }, [grid.rows, grid.cols, total, appearTime, pauseTime, dissolveTime, totalTime]);
 
   useEffect(() => {
     if (open && onFullyCovered) {

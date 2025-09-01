@@ -139,3 +139,16 @@ body {
   80% { opacity: 1; transform: translateY(-18px) rotate(var(--rot, 0deg)); }
   100% { opacity: 0; transform: translateY(-32px) rotate(var(--rot, 0deg)); }
 }
+
+/* Hub layout */
+.hub { display:flex; justify-content:center; padding: 2rem 1rem; }
+.hub-grid { width: min(1100px, 100%); display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; }
+.app-tile { appearance:none; border:2px solid #111; border-bottom-width:6px; background:#fff; padding:1rem .75rem; border-radius:12px; cursor:pointer; transition: transform .08s ease, box-shadow .08s ease; display:flex; flex-direction:column; align-items:center; }
+.app-tile:active { transform: translateY(2px); border-bottom-width:2px; }
+.app-icon { width: 90px; height: 90px; display:grid; place-items:center; }
+.app-title { margin-top: .75rem; font-weight:800; letter-spacing:.3px; text-align:center; }
+
+/* Roulette animation */
+.roulette { width:88px; height:88px; border-radius:50%; }
+@keyframes spinRoulette { 0% { transform: rotate(0turn); } 100% { transform: rotate(5.5turn); } }
+.spinning { animation: spinRoulette 1.2s cubic-bezier(.2,.7,.2,1) both; }

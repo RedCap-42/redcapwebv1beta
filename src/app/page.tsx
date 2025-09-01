@@ -1,49 +1,35 @@
 "use client";
-import Button from "@/components/ui/Button";
-import DissolveOverlay from "@/components/effects/DissolveOverlay";
-import SessionPicker from "@/components/sessions/SessionPicker";
+
 import { useState } from "react";
-import CharacterDock from "@/components/character/CharacterDock";
+import { useRouter } from "next/navigation";
+import RouletteWheelIcon from "@/components/features/session-generator/RouletteWheelIcon";
 
-export default function Home() {
-  const [dissolve, setDissolve] = useState(false);
-  const [showPicker, setShowPicker] = useState(false);
+export default function HomeHub() {
+  const router = useRouter();
+  const [spinning, setSpinning] = useState(false);
 
-  const handleGenerate = () => {
-    setDissolve(true);
-  };
-
-  const handleFullyCovered = () => {
-    setShowPicker(true);
-  };
-
-  const handleAnimationEnd = () => {
-    setDissolve(false);
+  const openSessionGenerator = () => {
+    if (spinning) return;
+    setSpinning(true);
+    // Let the wheel spin briefly then navigate to the app
+    setTimeout(() => router.push("/apps/session-generator"), 1400);
   };
 
   return (
-  <section className="relative min-h-[calc(100dvh-120px)] pt-2">{/* small breathing room below sticky header */}
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10 sm:py-16" />
-
-      {/* Bottom fixed action */}
-      <div className="fixed inset-x-0 bottom-0 z-30 bg-white/90 backdrop-blur safe-bottom border-t-4 border-neutral-100">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-3">
-          <div className="w-full flex items-end justify-center mb-2">
-            {!showPicker && <CharacterDock size={80} />}
+    <main className="hub">
+      <section className="hub-grid">
+        <button
+          className="app-tile"
+          onClick={openSessionGenerator}
+          aria-label="Ouvrir Générateur de séance"
+        >
+          <div className="app-icon">
+            <RouletteWheelIcon spinning={spinning} />
           </div>
-        </div>
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 pb-3">
-          <Button className="w-full daydream-font" onClick={handleGenerate}>
-            generer une seance
-          </Button>
-        </div>
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 pb-2 text-center text-[11px] text-neutral-500 select-none">
-          make by CasquetteRouge 2025
-        </div>
-      </div>
-
-      {showPicker && <SessionPicker open={showPicker} />}
-      <DissolveOverlay open={dissolve} onFullyCovered={handleFullyCovered} onAnimationEnd={handleAnimationEnd} />
-    </section>
+          <div className="app-title text-font">Générateur de séance</div>
+        </button>
+        {/* D'autres apps viendront ici plus tard */}
+      </section>
+    </main>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 interface OptimizedImageProps {
   src: string;
@@ -7,6 +8,8 @@ interface OptimizedImageProps {
   className?: string;
   style?: React.CSSProperties;
   onError?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
+  width?: number;
+  height?: number;
 }
 
 export default function OptimizedImage({ 
@@ -15,7 +18,9 @@ export default function OptimizedImage({
   sessionType, 
   className = '', 
   style = {},
-  onError 
+  onError,
+  width = 500,
+  height = 300
 }: OptimizedImageProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
@@ -63,9 +68,11 @@ export default function OptimizedImage({
 
   return (
     <>
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={width}
+        height={height}
         className={getOptimizedClassName()}
         style={getOptimizedStyle()}
         onLoad={handleLoad}

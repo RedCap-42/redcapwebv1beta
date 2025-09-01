@@ -1,0 +1,9 @@
+:root {
+  --primary-color: #ff0000; /* Red color for the casino theme */
+  --secondary-color: #000000; /* Black for contrast */
+  --accent-color: #ffffff; /* White for text and accents */
+  --font-family: 'Arial', sans-serif; /* Default font family */
+  --border-radius: 8px; /* Standard border radius for buttons */
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Standard box shadow */
+  --transition-speed: 0.3s; /* Standard transition speed for animations */
+}
